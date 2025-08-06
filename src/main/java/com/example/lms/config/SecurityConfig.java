@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll()
+                        .requestMatchers("/api/courses/**").permitAll() // <-- allow course APIs for testing
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

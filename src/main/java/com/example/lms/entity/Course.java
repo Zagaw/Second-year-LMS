@@ -1,0 +1,28 @@
+package com.example.lms.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Course {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "course_id") // DB column name
+    private Long courseId;
+
+    @Column(nullable = false)
+    private String name;
+
+    private String description;
+
+    @ManyToMany(mappedBy = "courses") // "courses" refers to the field in User
+    private Set<User> users = new HashSet<>();
+}

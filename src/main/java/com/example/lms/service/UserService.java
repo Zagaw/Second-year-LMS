@@ -1,6 +1,5 @@
 package com.example.lms.service;
 
-
 import com.example.lms.entity.User;
 import com.example.lms.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +28,17 @@ public class UserService {
     public Optional<User> update(Long id, User updatedUser) {
         return userRepository.findById(id).map(user -> {
             user.setUsername(updatedUser.getUsername());
-            user.setPassword(updatedUser.getPassword());
             user.setEmail(updatedUser.getEmail());
+
+            // Only update password if a new one is provided
+            if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+            }
+
             return userRepository.save(user);
         });
     }
+
 
     public boolean delete(Long id) {
         if (userRepository.existsById(id)) {
