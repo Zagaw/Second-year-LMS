@@ -2,11 +2,16 @@ package com.example.lms.controller;
 
 
 import com.example.lms.config.JwtUtil;
+import com.example.lms.dto.UserDTO;
 import com.example.lms.entity.User;
+import com.example.lms.repository.UserRepository;
 import com.example.lms.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @RestController
 @RequestMapping("/api/users")
@@ -17,6 +22,9 @@ public class UserController {
 
     @Autowired
     private JwtUtil jwtUtil; // ✅ Add this
+
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
@@ -47,6 +55,13 @@ public class UserController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        return userRepository.findByUsername(userDetails.getUsername())
+                .map(user -> ResponseEntity.ok(new UserDTO(user.getId(), user.getUsername(), user.getEmail())))
+                .orElse(ResponseEntity.status(401).build());
     }
 }
 

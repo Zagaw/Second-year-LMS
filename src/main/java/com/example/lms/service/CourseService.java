@@ -27,6 +27,7 @@ public class CourseService {
         return courseRepository.findAll();
     }
 
+
     public Course assignCourseToUser(Long courseId, Long userId) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found"));

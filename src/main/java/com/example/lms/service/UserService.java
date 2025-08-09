@@ -39,7 +39,6 @@ public class UserService {
         });
     }
 
-
     public boolean delete(Long id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
