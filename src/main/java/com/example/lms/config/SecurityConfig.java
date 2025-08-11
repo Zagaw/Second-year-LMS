@@ -3,6 +3,7 @@ package com.example.lms.config;
 import com.example.lms.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.*;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,7 +35,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // public endpoints:
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll()
-                        .requestMatchers("/api/courses/**").permitAll() // <-- allow course APIs for testing
+                        // allow public GET listing
+                        .requestMatchers(HttpMethod.GET, "/api/courses/**").permitAll()
+                        // teacher-only endpoints (POST create course)
+                        //.requestMatchers(HttpMethod.POST, "/api/courses/**").hasAuthority("TEACHER")
+                        .requestMatchers(HttpMethod.POST, "/api/courses/**").hasRole("TEACHER")
+                        .requestMatchers("/api/courses/**").permitAll()  // allow everyone for other course endpoints
                         .requestMatchers("/error").permitAll()  // add this line
                         // all other endpoints require authentication
                         .anyRequest().authenticated()

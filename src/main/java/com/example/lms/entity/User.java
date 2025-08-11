@@ -40,7 +40,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -61,6 +60,9 @@ public class User {
     private String password;
 
     private String email;
+
+    @Column(nullable = false)
+    private String role;  // add this: role like "ROLE_TEACHER" or "ROLE_STUDENT"
 
     @ManyToMany
     @JoinTable(

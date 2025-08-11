@@ -1,5 +1,6 @@
 package com.example.lms.service;
 
+import com.example.lms.entity.Role;
 import com.example.lms.entity.User;
 import com.example.lms.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public User register(User user) {
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("STUDENT");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }

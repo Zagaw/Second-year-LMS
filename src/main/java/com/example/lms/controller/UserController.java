@@ -1,6 +1,6 @@
 package com.example.lms.controller;
 
-
+import java.util.Map;
 import com.example.lms.config.JwtUtil;
 import com.example.lms.dto.UserDTO;
 import com.example.lms.entity.User;
@@ -35,10 +35,12 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody User loginRequest) {
         return userService.login(loginRequest.getUsername(), loginRequest.getPassword())
                 .map(user -> {
-                    String token = jwtUtil.generateToken(user.getUsername());
+                    //String token = jwtUtil.generateToken(user.getUsername());
+                    String token = jwtUtil.generateTokenFromUser(user.getUsername(), user.getRole());
                     return ResponseEntity.ok("JWT Token: " + token);
                 })
                 .orElse(ResponseEntity.status(401).body("Invalid credentials"));
+
     }
 
     @PutMapping("/{id}")
