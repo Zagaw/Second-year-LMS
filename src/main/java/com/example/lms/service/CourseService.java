@@ -5,8 +5,10 @@ import com.example.lms.entity.User;
 import com.example.lms.repository.CourseRepository;
 import com.example.lms.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseService {

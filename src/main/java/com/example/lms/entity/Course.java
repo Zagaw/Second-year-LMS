@@ -30,6 +30,7 @@ package com.example.lms.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -56,6 +57,10 @@ public class Course {
     @ManyToMany(mappedBy = "courses") // "courses" refers to the field in User
     @JsonIgnore
     private Set<User> users = new HashSet<>();
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<Material> materials = new HashSet<>();
 }
 
 

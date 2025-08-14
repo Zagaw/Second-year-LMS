@@ -41,6 +41,8 @@ public class SecurityConfig {
                         //.requestMatchers(HttpMethod.POST, "/api/courses/**").hasAuthority("TEACHER")
                         .requestMatchers(HttpMethod.POST, "/api/courses/**").hasRole("TEACHER")
                         .requestMatchers("/api/courses/**").permitAll()  // allow everyone for other course endpoints
+                        .requestMatchers(HttpMethod.POST, "/api/materials/course/**").hasRole("TEACHER")
+                        .requestMatchers("/api/materials/course/**").permitAll()
                         .requestMatchers("/error").permitAll()  // add this line
                         // all other endpoints require authentication
                         .anyRequest().authenticated()
