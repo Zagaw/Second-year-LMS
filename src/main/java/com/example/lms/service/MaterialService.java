@@ -33,4 +33,18 @@ public class MaterialService {
         material.setCourse(course);
         return materialRepository.save(material);
     }
+
+    public void deleteMaterial(Long courseId, Long materialId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        Material material = materialRepository.findById(materialId)
+                .orElseThrow(() -> new RuntimeException("Material not found"));
+
+        if (!material.getCourse().getCourseId().equals(course.getCourseId())) {
+            throw new RuntimeException("Material does not belong to this course");
+        }
+
+        materialRepository.delete(material);
+    }
 }

@@ -33,5 +33,11 @@ public class MaterialController {
     public ResponseEntity<Material> addMaterial(@PathVariable Long courseId, @RequestBody Material material) {
         return ResponseEntity.ok(materialService.createMaterial(courseId, material));
     }
+
+    @DeleteMapping("/course/{courseId}/{materialId}")
+    public ResponseEntity<String> deleteMaterial(@PathVariable Long courseId, @PathVariable Long materialId) {
+        materialService.deleteMaterial(courseId, materialId);
+        return ResponseEntity.ok("Material deleted successfully");
+    }
 }
 
