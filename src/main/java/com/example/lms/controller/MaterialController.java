@@ -35,6 +35,7 @@ public class MaterialController {
     }
 
     @DeleteMapping("/course/{courseId}/{materialId}")
+    @PreAuthorize("hasAuthority('TEACHER')")
     public ResponseEntity<String> deleteMaterial(@PathVariable Long courseId, @PathVariable Long materialId) {
         materialService.deleteMaterial(courseId, materialId);
         return ResponseEntity.ok("Material deleted successfully");
