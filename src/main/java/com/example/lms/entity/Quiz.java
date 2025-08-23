@@ -20,6 +20,10 @@ public class Quiz {
     @JoinColumn(name = "material_id")
     private Material material;
 
+    /*@OneToOne
+    @JoinColumn(name = "material_id", nullable = false)
+    private Material material;*/
+
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<QuizQuestion> questions;

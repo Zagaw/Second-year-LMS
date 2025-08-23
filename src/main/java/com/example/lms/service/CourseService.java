@@ -30,7 +30,7 @@ public class CourseService {
     }
 
 
-    public Course assignCourseToUser(Long courseId, Long userId) {
+    /*public Course assignCourseToUser(Long courseId, Long userId) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
         User user = userRepository.findById(userId)
@@ -40,5 +40,14 @@ public class CourseService {
         userRepository.save(user);
 
         return course;
+    }*/
+
+    @Transactional
+    public void deleteCourse(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+
+        courseRepository.delete(course);
     }
 }

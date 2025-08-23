@@ -34,6 +34,13 @@ public class Material {
     /*@OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
     private List<Quiz> quizzes;*/
 
+    /*@OneToOne(mappedBy = "material", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Quiz quiz;*/
+
+    //
+
+
     // --- Getters and Setters ---
 
 }

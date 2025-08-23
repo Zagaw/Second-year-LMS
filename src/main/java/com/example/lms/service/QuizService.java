@@ -5,9 +5,7 @@ import com.example.lms.dto.*;
 import com.example.lms.entity.Material;
 import com.example.lms.entity.Quiz;
 import com.example.lms.entity.QuizQuestion;
-import com.example.lms.repository.MaterialRepository;
-import com.example.lms.repository.QuizQuestionRepository;
-import com.example.lms.repository.QuizRepository;
+import com.example.lms.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +20,19 @@ public class QuizService {
     private final QuizRepository quizRepository;
     private final QuizQuestionRepository questionRepository;
     private final MaterialRepository materialRepository;
+    private final StudentQuizAnswerRepository answerRepository;
+    private final StudentQuizSubmissionRepository submissionRepository;
 
     public QuizService(QuizRepository quizRepository,
                        QuizQuestionRepository questionRepository,
-                       MaterialRepository materialRepository) {
+                       MaterialRepository materialRepository,
+                       StudentQuizAnswerRepository answerRepository,
+                       StudentQuizSubmissionRepository submissionRepository) {
         this.quizRepository = quizRepository;
         this.questionRepository = questionRepository;
         this.materialRepository = materialRepository;
+        this.answerRepository = answerRepository;
+        this.submissionRepository = submissionRepository;
     }
 
     public Quiz createQuiz(Long materialId, CreateQuizRequest req) {
@@ -77,11 +81,24 @@ public class QuizService {
 
     public void deleteQuiz(Long quizId) {
         if (!quizRepository.existsById(quizId)) throw new RuntimeException("Quiz not found");
+
+        // 🚨 check if submissions exist before deleting quiz
+        boolean hasSubmissions = !submissionRepository.findByQuiz_Id(quizId).isEmpty();
+        if (hasSubmissions) {
+            throw new RuntimeException("Cannot delete this quiz because students have already submitted answers.");
+        }
+
         quizRepository.deleteById(quizId);
     }
 
     public void deleteQuestion(Long questionId) {
         if (!questionRepository.existsById(questionId)) throw new RuntimeException("Question not found");
+
+        // 🚨 check if student answers exist
+        boolean hasAnswers = answerRepository.existsByQuestion_QuestionId(questionId);
+        if (hasAnswers) {
+            throw new RuntimeException("Cannot delete this question because students have already submitted answers.");
+        }
         questionRepository.deleteById(questionId);
     }
 

@@ -28,8 +28,15 @@ public class CourseController {
         return courseService.getAllCourses();
     }
 
-    @PostMapping("/{courseId}/assign/{userId}")
+    /*@PostMapping("/{courseId}/assign/{userId}")
     public Course assignCourseToUser(@PathVariable Long courseId, @PathVariable Long userId) {
         return courseService.assignCourseToUser(courseId, userId);
+    }*/
+
+    @DeleteMapping("/{courseId}")
+    @PreAuthorize("hasAuthority('TEACHER')")
+    public String deleteCourse(@PathVariable Long courseId) {
+        courseService.deleteCourse(courseId);
+        return "Course deleted successfully!";
     }
 }

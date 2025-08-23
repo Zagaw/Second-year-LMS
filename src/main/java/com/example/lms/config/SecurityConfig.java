@@ -40,6 +40,7 @@ public class SecurityConfig {
                         // teacher-only endpoints (POST create course)
                         //.requestMatchers(HttpMethod.POST, "/api/courses/**").hasAuthority("TEACHER")
                         .requestMatchers(HttpMethod.POST, "/api/courses/**").hasRole("TEACHER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/courses/**").hasRole("TEACHER")
                         .requestMatchers("/api/courses/**").permitAll()  // allow everyone for other course endpoints
                         .requestMatchers(HttpMethod.POST, "/api/materials/course/**").hasRole("TEACHER")
                         .requestMatchers(HttpMethod.DELETE, "/api/materials/course/**").hasRole("TEACHER")
@@ -47,8 +48,15 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.POST, "/api/quizzes/material/**" , "/api/quizzes/*/questions" , "/api/quizzes/*/questions/bulk").hasRole("TEACHER")
                         .requestMatchers(HttpMethod.DELETE, "/api/quizzes/**", "/api/quizzes/questions/**").hasRole("TEACHER")
-
                         .requestMatchers("/api/quizzes/**").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/api/quizzes/*/submissions").hasRole("TEACHER")
+                        .requestMatchers(HttpMethod.GET, "/api/quizzes/*/submissions").hasRole("TEACHER")
+                        .requestMatchers(HttpMethod.GET, "/api/quizzes/*/submissions/student/**").permitAll()
+                        .requestMatchers("/api/quizzes/*/submissions").permitAll()
+                        .requestMatchers("/api/quizzes/*/submissions/**").permitAll()
+
+
 
                         .requestMatchers("/error").permitAll()  // add this line
                         // all other endpoints require authentication

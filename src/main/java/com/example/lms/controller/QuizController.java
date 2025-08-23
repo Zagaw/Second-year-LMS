@@ -59,16 +59,24 @@ public class QuizController {
     @DeleteMapping("/{quizId}")
     @PreAuthorize("hasAuthority('TEACHER')")
     public ResponseEntity<String> deleteQuiz(@PathVariable Long quizId) {
-        quizService.deleteQuiz(quizId);
-        return ResponseEntity.ok("Quiz deleted");
+        try {
+            quizService.deleteQuiz(quizId);
+            return ResponseEntity.ok("Quiz deleted successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     /** Delete a single question */
     @DeleteMapping("/questions/{questionId}")
     @PreAuthorize("hasAuthority('TEACHER')")
     public ResponseEntity<String> deleteQuestion(@PathVariable Long questionId) {
-        quizService.deleteQuestion(questionId);
-        return ResponseEntity.ok("Question deleted");
+        try {
+            quizService.deleteQuestion(questionId);
+            return ResponseEntity.ok("Question deleted successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 

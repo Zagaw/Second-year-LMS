@@ -4,6 +4,7 @@ import com.example.lms.entity.Course;
 import com.example.lms.entity.Material;
 import com.example.lms.repository.CourseRepository;
 import com.example.lms.repository.MaterialRepository;
+import com.example.lms.repository.QuizRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,10 +14,12 @@ public class MaterialService {
 
     private final MaterialRepository materialRepository;
     private final CourseRepository courseRepository;
+    private final QuizRepository quizRepository;
 
-    public MaterialService(MaterialRepository materialRepository, CourseRepository courseRepository) {
+    public MaterialService(MaterialRepository materialRepository, CourseRepository courseRepository, QuizRepository quizRepository) {
         this.materialRepository = materialRepository;
         this.courseRepository = courseRepository;
+        this.quizRepository = quizRepository;
     }
 
     public List<Material> getAllMaterials() {
@@ -43,6 +46,11 @@ public class MaterialService {
 
         if (!material.getCourse().getCourseId().equals(course.getCourseId())) {
             throw new RuntimeException("Material does not belong to this course");
+        }
+
+        boolean hasQuiz = !quizRepository.findByMaterial_MaterialId(materialId).isEmpty();
+        if (hasQuiz) {
+            throw new RuntimeException("Cannot delete this material because quizzes are linked.");
         }
 
         materialRepository.delete(material);
