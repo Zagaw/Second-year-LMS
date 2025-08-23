@@ -8,6 +8,7 @@ import com.example.lms.repository.QuizRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MaterialService {
@@ -24,6 +25,10 @@ public class MaterialService {
 
     public List<Material> getAllMaterials() {
         return materialRepository.findAll();
+    }
+
+    public Optional<Material> getMaterialById(Long materialId) {
+        return materialRepository.findById(materialId);
     }
 
     public List<Material> getMaterialByCourse(Long courseId) {

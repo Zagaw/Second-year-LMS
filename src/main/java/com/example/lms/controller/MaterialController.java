@@ -28,6 +28,14 @@ public class MaterialController {
         return materialService.getMaterialByCourse(courseId);
     }
 
+    @GetMapping("/{materialId}")
+    public ResponseEntity<Material> getMaterialById(@PathVariable Long materialId) {
+        return materialService.getMaterialById(materialId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
     @PostMapping("/course/{courseId}")
     @PreAuthorize("hasAuthority('TEACHER')")
     public ResponseEntity<Material> addMaterial(@PathVariable Long courseId, @RequestBody Material material) {
