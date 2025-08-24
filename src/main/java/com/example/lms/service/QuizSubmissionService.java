@@ -1,7 +1,6 @@
 package com.example.lms.service;
 
-import com.example.lms.dto.QuizSubmissionRequest;
-import com.example.lms.dto.QuizSubmissionResponse;
+import com.example.lms.dto.*;
 import com.example.lms.entity.*;
 import com.example.lms.repository.*;
 import jakarta.transaction.Transactional;
@@ -94,5 +93,54 @@ public class QuizSubmissionService {
         return submissionRepo.findById(submissionId)
                 .orElseThrow(() -> new RuntimeException("Submission not found"));
     }
+
+    public List<StudentSubmissionDTO> getAllSubmissionsByStudentDTO(Long studentId) {
+        List<StudentQuizSubmission> submissions = submissionRepo.findByStudent_Id(studentId);
+
+        return submissions.stream().map(sub -> StudentSubmissionDTO.builder()
+                .submissionId(sub.getSubmissionId())
+                .quizTitle(sub.getQuiz().getTitle())
+                .materialTitle(sub.getQuiz().getMaterial() != null ? sub.getQuiz().getMaterial().getTitle() : null)
+                .courseName(sub.getQuiz().getMaterial() != null && sub.getQuiz().getMaterial().getCourse() != null
+                        ? sub.getQuiz().getMaterial().getCourse().getName() : null)
+                .score(sub.getScore())
+                .totalQuestions(sub.getTotalQuestions())
+                .submittedAt(sub.getSubmittedAt())
+                .build()
+        ).toList();
+    }
+
+    /*public List<AllSubmissionsDTO> getAllSubmissionsForTeachers() {
+        return submissionRepo.findAll().stream().map(sub -> AllSubmissionsDTO.builder()
+                        .submissionId(sub.getSubmissionId())
+                        .quizId(sub.getQuiz().getId())
+                        .quizTitle(sub.getQuiz().getTitle())
+                        .studentId(sub.getStudent().getId())
+                        .studentUsername(sub.getStudent().getUsername())
+                        .score(sub.getScore())
+                        .totalQuestions(sub.getTotalQuestions())
+                        .submittedAt(sub.getSubmittedAt())
+                        .build())
+                .toList();
+    }*/
+
+    public List<TeacherSubmissionDTO> getAllSubmissionsForTeachers() {
+        return submissionRepo.findAll().stream()
+                .map(sub -> TeacherSubmissionDTO.builder()
+                        .submissionId(sub.getSubmissionId())
+                        .studentName(sub.getStudent().getUsername())
+                        .quizTitle(sub.getQuiz().getTitle())
+                        .score(sub.getScore())
+                        .materialTitle(sub.getQuiz().getMaterial() != null ? sub.getQuiz().getMaterial().getTitle() : null)
+                        .courseName(sub.getQuiz().getMaterial() != null && sub.getQuiz().getMaterial().getCourse() != null
+                                ? sub.getQuiz().getMaterial().getCourse().getName() : null)
+                        .totalQuestions(sub.getTotalQuestions())
+                        .submittedAt(sub.getSubmittedAt())
+                        .build()
+                )
+                .toList();
+    }
+
+
 
 }

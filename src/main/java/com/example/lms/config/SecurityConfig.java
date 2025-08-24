@@ -50,11 +50,20 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/quizzes/**", "/api/quizzes/questions/**").hasRole("TEACHER")
                         .requestMatchers("/api/quizzes/**").permitAll()
 
-                        .requestMatchers(HttpMethod.POST, "/api/quizzes/*/submissions").hasRole("TEACHER")
-                        .requestMatchers(HttpMethod.GET, "/api/quizzes/*/submissions").hasRole("TEACHER")
-                        .requestMatchers(HttpMethod.GET, "/api/quizzes/*/submissions/student/**").permitAll()
-                        .requestMatchers("/api/quizzes/*/submissions").permitAll()
-                        .requestMatchers("/api/quizzes/*/submissions/**").permitAll()
+                        //.requestMatchers(HttpMethod.POST, "/api/quizzes/*/submissions").hasRole("TEACHER")
+                        //.requestMatchers(HttpMethod.GET, "/api/quizzes/*/submissions").hasRole("TEACHER")
+                        //.requestMatchers(HttpMethod.GET, "/api/quizzes/*/submissions/student/**").permitAll()
+                        //.requestMatchers("/api/quizzes/*/submissions").permitAll()
+                        //.requestMatchers("/api/quizzes/*/submissions/**").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/api/quizzes/*/submissions").hasRole("STUDENT") // only students submit
+                        .requestMatchers(HttpMethod.GET, "/api/quizzes/*/submissions").hasRole("TEACHER") // teacher sees all submissions
+                        .requestMatchers(HttpMethod.GET, "/api/quizzes/*/submissions/student/**").hasAnyRole("STUDENT","TEACHER") // student sees own, teacher can also see
+                        .requestMatchers(HttpMethod.GET, "/api/students/*/submissions")
+                        .authenticated() // access controlled by @PreAuthorize in controller
+                        .requestMatchers("/api/teacher/submissions").hasRole("TEACHER")
+                        .requestMatchers("/api/quizzes/*/submissions/**").denyAll() // block others unless explicitly allowed
+
 
 
 
